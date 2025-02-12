@@ -19,7 +19,7 @@ def user_management():
 def tab_user_management():
     # Initialize session state variables if they don't exist
     if st.button('Clear_Cash'):
-        st.cash_data.clear()
+        read_users.clear()
     if 'clear_tab_c' not in st.session_state:
         st.session_state['clear_tab_c'] = False
     
