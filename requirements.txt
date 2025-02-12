@@ -1,0 +1,6 @@
+streamlit
+supabase
+pathlib
+python-dotenv
+werkzeug
+pandas
