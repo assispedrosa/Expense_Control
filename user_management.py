@@ -19,9 +19,10 @@ def user_management():
 def tab_user_management():
     # Button to clear cache data from selected functions
     with st.container(border=True):
+        st.write('Select Table to Clear')
         cols = st.columns(2)
         with cols[0]:
-            st.radio('Select Cache to Clear', ['Users', 'Categories'], key='cache_to_clear')
+            st.radio(options=['Users', 'Categories'], key='cache_to_clear')
         with cols[1]:
             if st.button('Clear_Cache'):
                 if st.session_state.cache_to_clear == 'Users':
