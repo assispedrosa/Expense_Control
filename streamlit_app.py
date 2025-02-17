@@ -3,6 +3,7 @@ from time import sleep
 import streamlit as st
 from crud import read_users
 from user_management import user_management
+from expense_control import expense_control
 from dotenv import load_dotenv
 
 # load_dotenv()
@@ -51,8 +52,8 @@ def main_page():
         
     if st.session_state['page_user_management']:
         user_management()
-    # else:
-    #     expense_control()
+    else:
+        expense_control()
 
 def main():
     if not 'logged' in st.session_state:

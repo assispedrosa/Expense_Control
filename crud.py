@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 MYPATH = Path(__file__).parent
 # Load environment variables from .env
-# load_dotenv()
+# load_dotenv(MYPATH / '.env')
 # URL = os.getenv("URL")
 # KEY = os.getenv("KEY")
 
