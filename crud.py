@@ -10,13 +10,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 MYPATH = Path(__file__).parent
 # Load environment variables from .env
-load_dotenv(MYPATH / '.env')
-URL = os.getenv("URL")
-KEY = os.getenv("KEY")
+# load_dotenv(MYPATH / '.env')
+# URL = os.getenv("URL")
+# KEY = os.getenv("KEY")
 
 # Load environment variables from .secrets
-# URL = st.secrets.supabase.url
-# KEY = st.secrets.supabase.key
+URL = st.secrets.supabase.url
+KEY = st.secrets.supabase.key
 
 supabase: Client = create_client(URL, KEY)
 
