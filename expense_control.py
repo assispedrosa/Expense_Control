@@ -15,7 +15,7 @@ def expense_control():
     with st.sidebar:
         tab_expense_control()
     df_expenses = read_expenses('df')
-    st.write(df_expenses)
+    st.dataframe(df_expenses)
     
     
 
