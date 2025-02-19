@@ -10,13 +10,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 MYPATH = Path(__file__).parent
 # Load environment variables from .env
-# load_dotenv(MYPATH / '.env')
-# URL = os.getenv("URL")
-# KEY = os.getenv("KEY")
+load_dotenv(MYPATH / '.env')
+URL = os.getenv("URL")
+KEY = os.getenv("KEY")
 
 # Load environment variables from .secrets
-URL = st.secrets.supabase.url
-KEY = st.secrets.supabase.key
+# URL = st.secrets.supabase.url
+# KEY = st.secrets.supabase.key
 
 supabase: Client = create_client(URL, KEY)
 
@@ -66,7 +66,6 @@ def get_situation(id_sit):
         .execute()
     )
     return response.data[0]['situation']
-
 
 # ==================== TABLE USER_CATEGORY ====================
 class UserCategory():
@@ -133,7 +132,6 @@ def get_category(id_cat):
         .execute()
     )
     return response.data[0]['category']
-
 
 # ==================== TABLE USERS ====================
 class Users():
@@ -231,3 +229,137 @@ def delete_user(id):
         .execute()
     )
     return response.count
+
+class Expenses():
+    __tablename__ = 'expenditures'
+    def __init__(
+        self,
+        id: int = None,
+        created_at: datetime = None,
+        created_by: int = None,
+        updated_at: datetime = None,
+        updated_by: int = None,
+        date: datetime.date = None,
+        recipient: str = None,
+        value: float = None,
+        payment_method: str = None,
+        payer: str = None,
+        cost_description: str = None,
+        cost_type: str = None,
+        cost_category: str = None,
+        project_phase: str = None,
+        cost_center: str = None,
+        allocation_vinicius: float = None,
+        allocation_alex: float = None,
+        realized_vinicius: float = None,
+        realized_alex: float = None,
+        refundable: bool = None,
+        refunded: bool = None,
+        refund_value: float = None,
+        refund_recipient: str = None,
+        refund_payer: str = None,
+        refund_date: datetime = None,
+        id_sit: int = None
+    ):
+        self.id = id
+        self.created_at = created_at
+        self.created_by = created_by
+        self.updated_at = updated_at
+        self.updated_by = updated_by
+        self.date = date
+        self.recipient = recipient
+        self.value = value
+        self.payment_method = payment_method
+        self.payer = payer
+        self.cost_description = cost_description
+        self.cost_type = cost_type
+        self.cost_category = cost_category
+        self.project_phase = project_phase
+        self.cost_center = cost_center
+        self.allocation_vinicius = allocation_vinicius
+        self.allocation_alex = allocation_alex
+        self.realized_vinicius = realized_vinicius
+        self.realized_alex = realized_alex
+        self.refundable = refundable
+        self.refunded = refunded
+        self.refund_value = refund_value
+        self.refund_recipient = refund_recipient
+        self.refund_payer = refund_payer
+        self.refund_date = refund_date
+        self.id_sit = id_sit
+        self.situation = get_situation(id_sit)
+
+def create_expense(
+        created_by,
+        date,
+        recipient,
+        value,
+        payment_method,
+        payer,
+        **kwargs
+):
+    response = (
+        supabase.table('expenditures')
+        .insert([{**{
+            'created_by': created_by,
+            'date': date,
+            'recipient': recipient,
+            'value': value,
+            'payment_method': payment_method,
+            'payer': payer,
+            'id_sit': 1}, **kwargs}])
+        .execute()
+    )
+    return response.count
+
+@st.cache_data
+def read_expenses(return_type = 'df'):
+    response = (
+        supabase.table('expenditures')
+        .select()
+        .eq('id_sit', 1)
+        .execute()
+    )
+    
+    if return_type == 'list':
+        return response.data
+    elif return_type == 'df':
+        df = pd.DataFrame(response.data)
+        return df.set_index('id')
+    elif return_type == 'class':
+        df = pd.DataFrame(response.data)
+        expenses = [Expenses(**row) for index, row in df.iterrows()]
+        return expenses
+    else:
+        return print('Invalid return_type')
+
+def read_expense_by_id(id):
+    response = (
+        supabase.table('expenditures')
+        .select()
+        .eq('id', id)
+        .execute()
+    )
+    return Expenses(**response.data[0])
+
+def update_expense(
+        id,
+        **kwargs
+):
+    response = (
+        supabase.table('expenditures')
+        .update({**kwargs, 'updated_at': datetime.now().isoformat()})
+        .eq('id', id)
+        .execute()
+    )
+    return response.count
+
+def delete_expense(id):
+    response = (
+        supabase.table('expenditures')
+        .update({'id_sit': 3})
+        .eq('id', id)
+        .execute()
+    )
+    return response.count
+

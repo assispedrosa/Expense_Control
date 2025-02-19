@@ -1,10 +1,23 @@
 from time import sleep
+from datetime import datetime
 import streamlit as st
 import pandas as pd
+from crud import (
+    create_expense,
+    read_expenses,
+    update_expense,
+    delete_expense,
+    read_expense_by_id
+)
 
 def expense_control():
+    logged_user = st.session_state['logged_user']
     with st.sidebar:
         tab_expense_control()
+    df_expenses = read_expenses('df')
+    st.write(df_expenses)
+    
+    
 
 
 def tab_expense_control():
